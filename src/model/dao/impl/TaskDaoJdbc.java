@@ -1,11 +1,15 @@
 package model.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
+import db.Database;
 import model.dao.TaskDao;
 import model.entities.Task;
 
@@ -29,9 +33,14 @@ public class TaskDaoJdbc implements TaskDao {
 			
 			rs = st.executeQuery();
 			
-			task = instantiateTask(rs);
+			if (rs.next()) {
+				task = instantiateTask(rs);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			Database.closeResultSet(rs);
+			Database.closeStatement(st);
 		}
 		
 		return task;
@@ -39,14 +48,50 @@ public class TaskDaoJdbc implements TaskDao {
 
 	@Override
 	public List<Task> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		List<Task> tasks = new ArrayList<Task>();
+		
+		try {
+			st = conn.prepareStatement("SELECT * FROM tasks");
+			
+			rs = st.executeQuery();
+			
+			while(rs.next()) {
+				tasks.add(instantiateTask(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeResultSet(rs);
+			Database.closeStatement(st);
+		}
+		
+		return tasks;
 	}
 
 	@Override
 	public void add(Task t) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		
+		try {
+			st = conn.prepareStatement("INSERT INTO tasks (title, moment, done) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			st.setString(1, t.getTitle());
+			st.setDate(2, new Date(t.getMoment().getTime()));
+			st.setBoolean(3, t.getDone());
+			
+			rs = st.executeQuery();
+
+			if (rs.next()) {
+				t.setId(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeResultSet(rs);
+			Database.closeStatement(st);
+		}
 	}
 
 	@Override
@@ -62,15 +107,12 @@ public class TaskDaoJdbc implements TaskDao {
 	}
 	
 	private static Task instantiateTask(ResultSet rs) throws SQLException {
-		Task t = null;
+		Task t = new Task();
 		
-		if (rs.next()) {
-			t = new Task();
-			t.setId(rs.getInt("id"));
-			t.setMoment(rs.getDate("moment"));
-			t.setTitle(rs.getString("title"));
-			t.setDone(rs.getBoolean("done"));
-		}
+		t.setId(rs.getInt("id"));
+		t.setMoment(rs.getDate("moment"));
+		t.setTitle(rs.getString("title"));
+		t.setDone(rs.getBoolean("done"));
 		
 		return t;
 	}
