@@ -1,6 +1,7 @@
 package main;
 
 import java.sql.Connection;
+import java.util.List;
 
 import db.Database;
 import model.dao.DaoFactory;
@@ -10,8 +11,8 @@ public class Program {
 
 	public static void main(String[] args) {
 		Connection conn = Database.getConnection();
-		Task t = DaoFactory.getTaskDao(conn).getById(2);
-		System.out.println(t);
+		List<Task> tasks = DaoFactory.getTaskDao(conn).getAll();
+		tasks.forEach(System.out::println);
 		Database.closeConnection();
 	}
 
