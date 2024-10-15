@@ -118,8 +118,17 @@ public class TaskDaoJdbc implements TaskDao {
 
 	@Override
 	public void delete(Task t) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
 		
+		try {
+			st = conn.prepareStatement("DELETE FROM tasks WHERE id=?");
+			st.setInt(1, t.getId());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeStatement(st);
+		}
 	}
 	
 	private static Task instantiateTask(ResultSet rs) throws SQLException {
