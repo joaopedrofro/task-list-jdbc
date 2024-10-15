@@ -81,8 +81,10 @@ public class TaskDaoJdbc implements TaskDao {
 			st.setDate(2, new Date(t.getMoment().getTime()));
 			st.setBoolean(3, t.getDone());
 			
-			rs = st.executeQuery();
-
+			int rowsAffected = st.executeUpdate();
+			
+			rs = st.getGeneratedKeys();
+			
 			if (rs.next()) {
 				t.setId(rs.getInt(1));
 			}

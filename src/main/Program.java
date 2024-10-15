@@ -1,7 +1,7 @@
 package main;
 
 import java.sql.Connection;
-import java.util.List;
+import java.util.Date;
 
 import db.Database;
 import model.dao.DaoFactory;
@@ -11,8 +11,16 @@ public class Program {
 
 	public static void main(String[] args) {
 		Connection conn = Database.getConnection();
-		List<Task> tasks = DaoFactory.getTaskDao(conn).getAll();
-		tasks.forEach(System.out::println);
+		
+		Task t = new Task();
+		t.setTitle("Nova task");
+		t.setMoment(new Date());
+		t.setDone(true);
+		
+		DaoFactory.getTaskDao(conn).add(t);
+		
+		System.out.println(t);
+		
 		Database.closeConnection();
 	}
 

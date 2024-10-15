@@ -15,7 +15,7 @@ public class Task implements Serializable {
 	public Task() {
 		super();
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}
