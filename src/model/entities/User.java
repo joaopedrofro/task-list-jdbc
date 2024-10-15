@@ -14,7 +14,7 @@ public class User implements Serializable {
 	private ArrayList<Task> tasks;
 
 	public User() {
-		super();
+		tasks = new ArrayList<Task>();
 	}
 
 	public User(String name, String lastName, String password, ArrayList<Task> tasks) {

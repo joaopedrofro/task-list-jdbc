@@ -16,6 +16,14 @@ public class Task implements Serializable {
 		super();
 	}
 	
+	public Task(Integer id, String title, Date moment, Boolean done) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.moment = moment;
+		this.done = done;
+	}
+
 	public Integer getId() {
 		return id;
 	}

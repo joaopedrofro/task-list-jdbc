@@ -2,16 +2,16 @@ package model.dao;
 
 import java.util.List;
 
-public interface Dao<T> {
+public interface Dao<E> {
 
-	T getById(Integer id);
+	E getById(Integer id);
 
-	List<T> getAll();
+	List<E> getAll();
 
-	void add(T t);
+	void add(E t);
 	
-	void update(T t);
+	void update(E t);
 	
-	void delete(T t);
+	void delete(E t);
 	
 }
