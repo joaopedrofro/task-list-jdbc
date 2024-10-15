@@ -81,7 +81,7 @@ public class TaskDaoJdbc implements TaskDao {
 			st.setDate(2, new Date(t.getMoment().getTime()));
 			st.setBoolean(3, t.getDone());
 			
-			int rowsAffected = st.executeUpdate();
+			st.executeUpdate();
 			
 			rs = st.getGeneratedKeys();
 			
@@ -98,8 +98,22 @@ public class TaskDaoJdbc implements TaskDao {
 
 	@Override
 	public void update(Task t) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
 		
+		try {
+			st = conn.prepareStatement("UPDATE tasks SET title=?, moment=?, done=? WHERE id=?");
+			
+			st.setString(1, t.getTitle());
+			st.setDate(2, new Date(t.getMoment().getTime()));
+			st.setBoolean(3, t.getDone());
+			st.setInt(4, t.getId());
+			
+			st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			Database.closeStatement(st);
+		}
 	}
 
 	@Override

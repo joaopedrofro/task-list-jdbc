@@ -1,10 +1,10 @@
 package main;
 
 import java.sql.Connection;
-import java.util.Date;
 
 import db.Database;
 import model.dao.DaoFactory;
+import model.dao.TaskDao;
 import model.entities.Task;
 
 public class Program {
@@ -12,14 +12,14 @@ public class Program {
 	public static void main(String[] args) {
 		Connection conn = Database.getConnection();
 		
-		Task t = new Task();
-		t.setTitle("Nova task");
-		t.setMoment(new Date());
-		t.setDone(true);
+		TaskDao td = DaoFactory.getTaskDao(conn);
 		
-		DaoFactory.getTaskDao(conn).add(t);
+		Task t = td.getById(7);
+		t.setTitle("Outra task");
 		
-		System.out.println(t);
+		td.update(t);
+		
+		System.out.println(td.getById(t.getId()));
 		
 		Database.closeConnection();
 	}
