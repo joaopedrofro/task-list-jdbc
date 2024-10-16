@@ -3,24 +3,47 @@ package main;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
+import java.util.Optional;
 
 import db.Database;
 import model.dao.DaoFactory;
+import model.dao.TaskDao;
 import model.dao.UserDao;
+import model.entities.Task;
 import model.entities.User;
 
 public class Program {
 
 	public static void main(String[] args) {
 		Connection conn = Database.getConnection();
+		
 		initDatabase(conn);
+		
+		TaskDao td = DaoFactory.getTaskDao(conn);
 		UserDao ud = DaoFactory.getUserDao(conn);
-		User u = ud.getById(2);
-		System.out.println(u.getTasks());
+		Optional<User> u = ud.getById(1);
+		
+		if (u.isPresent()) {
+			User user = u.get();
+			System.out.println(user);
+			System.out.println("Tarefas:");
+			user.getTasks().forEach(System.out::println);
+			System.out.println("Adicionando nova tarefa...");
+			Task t = new Task(0, "Jogar lixo fora", new Date(), false, user.getId());
+			td.add(t);
+			user.getTasks().add(t);
+			System.out.println("Tarefa nova:");
+			System.out.println(t);
+			
+		} else {
+			System.out.println("User not found!");
+		}
+		
 		Database.closeConnection();
 	}
 	
-	public static void initDatabase(Connection conn) {
+	private static void initDatabase(Connection conn) {
 		try (Statement st = conn.createStatement()) {
 			st.executeUpdate("DROP TABLE IF EXISTS users");
 			st.executeUpdate("DROP TABLE IF EXISTS tasks");

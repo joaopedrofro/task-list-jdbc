@@ -17,10 +17,11 @@ public class User implements Serializable {
 		tasks = new ArrayList<Task>();
 	}
 
-	public User(String name, String lastName, String password, ArrayList<Task> tasks) {
+	public User(Integer id, String name, String username, String password, ArrayList<Task> tasks) {
 		super();
+		this.id = id;
 		this.name = name;
-		this.username = lastName;
+		this.username = username;
 		this.password = password;
 		this.tasks = tasks;
 	}
@@ -80,7 +81,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", lastName=" + username + ", password=" + password + "]";
+		return "User [id=" + id + ", name=" + name + ", username=" + username + ", password=" + password + "]";
 	}
 
 }

@@ -1,10 +1,11 @@
 package model.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Dao<E> {
 
-	E getById(Integer id);
+	Optional<E> getById(Integer id);
 
 	List<E> getAll();
 

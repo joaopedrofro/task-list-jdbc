@@ -13,17 +13,27 @@ public class Task implements Serializable {
 	private String title;
 	private Date moment;
 	private Boolean done;
+	private Integer userId;
 
 	public Task() {
 		super();
 	}
-	
-	public Task(Integer id, String title, Date moment, Boolean done) {
+
+	public Task(Integer id, String title, Date moment, Boolean done, Integer userId) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.moment = moment;
 		this.done = done;
+		this.userId = userId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	public Integer getId() {
@@ -77,7 +87,8 @@ public class Task implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", title=" + title + ", moment=" + sdf.format(moment) + ", done=" + done + "]";
+		return "Task [id=" + id + ", title=" + title + ", moment=" + sdf.format(moment) + ", done=" + done + ", userId=" + userId
+				+ "]";
 	}
 
 }
