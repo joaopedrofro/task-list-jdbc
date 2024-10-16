@@ -3,15 +3,12 @@ package main;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
-import java.util.Optional;
+import java.util.Scanner;
 
 import db.Database;
 import model.dao.DaoFactory;
-import model.dao.TaskDao;
 import model.dao.UserDao;
-import model.entities.Task;
-import model.entities.User;
+import services.AuthenticationService;
 
 public class Program {
 
@@ -20,26 +17,25 @@ public class Program {
 		
 		initDatabase(conn);
 		
-		TaskDao td = DaoFactory.getTaskDao(conn);
+		Scanner sc = new Scanner(System.in);
+		
 		UserDao ud = DaoFactory.getUserDao(conn);
-		Optional<User> u = ud.getById(1);
 		
-		if (u.isPresent()) {
-			User user = u.get();
-			System.out.println(user);
-			System.out.println("Tarefas:");
-			user.getTasks().forEach(System.out::println);
-			System.out.println("Adicionando nova tarefa...");
-			Task t = new Task(0, "Jogar lixo fora", new Date(), false, user.getId());
-			td.add(t);
-			user.getTasks().add(t);
-			System.out.println("Tarefa nova:");
-			System.out.println(t);
-			
+		AuthenticationService auth = new AuthenticationService(ud);
+		
+		System.out.print("Username: ");
+		String username = sc.nextLine();
+		System.out.print("Password: ");
+		String password = sc.nextLine();
+		
+		if (auth.authenticate(username, password)) {
+			System.out.println("Login sucessfully!");
+			System.out.println(auth.getUserAuthenticated());
 		} else {
-			System.out.println("User not found!");
+			System.out.println("Invalid credentials!");
 		}
-		
+
+		sc.close();
 		Database.closeConnection();
 	}
 	
