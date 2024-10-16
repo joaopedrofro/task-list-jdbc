@@ -1,12 +1,14 @@
 package model.entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	private Integer id;
 	private String title;
 	private Date moment;
@@ -75,7 +77,7 @@ public class Task implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", title=" + title + ", moment=" + moment + ", done=" + done + "]";
+		return "Task [id=" + id + ", title=" + title + ", moment=" + sdf.format(moment) + ", done=" + done + "]";
 	}
 
 }

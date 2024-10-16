@@ -9,7 +9,7 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
-	private String lastName;
+	private String username;
 	private String password;
 	private ArrayList<Task> tasks;
 
@@ -20,7 +20,7 @@ public class User implements Serializable {
 	public User(String name, String lastName, String password, ArrayList<Task> tasks) {
 		super();
 		this.name = name;
-		this.lastName = lastName;
+		this.username = lastName;
 		this.password = password;
 		this.tasks = tasks;
 	}
@@ -45,12 +45,12 @@ public class User implements Serializable {
 		this.name = name;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setUsername(String lastName) {
+		this.username = lastName;
 	}
 
 	public String getPassword() {
@@ -80,7 +80,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", lastName=" + lastName + ", password=" + password + "]";
+		return "User [id=" + id + ", name=" + name + ", lastName=" + username + ", password=" + password + "]";
 	}
 
 }

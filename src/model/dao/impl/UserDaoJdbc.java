@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class UserDaoJdbc implements UserDao {
 
 					t.setId(rs.getInt("id"));
 					t.setTitle(rs.getString("title"));
-					t.setMoment(rs.getDate("moment"));
+					t.setMoment(new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("moment")));
 					t.setDone(rs.getBoolean("done"));
 
 					tasks.add(t);
@@ -55,6 +57,8 @@ public class UserDaoJdbc implements UserDao {
 				u.getTasks().addAll(tasks);
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
 			e.printStackTrace();
 		} finally {
 			Database.closeResultSet(rs);
@@ -92,7 +96,7 @@ public class UserDaoJdbc implements UserDao {
 		User u = new User();
 		u.setId(rs.getInt("id"));
 		u.setName(rs.getString("name"));
-		u.setLastName(rs.getString("last_name"));
+		u.setUsername(rs.getString("username"));
 		return u;
 	}
 
