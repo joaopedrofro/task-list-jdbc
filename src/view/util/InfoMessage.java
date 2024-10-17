@@ -24,5 +24,10 @@ public class InfoMessage {
 	public static void showUserInfo(User user) {
 		System.out.println("User: " + user.getName());
 	}
+	
+	public static void showSystemAndUserInfo(User user) {
+		showSystemInfo();
+		System.out.println("User: " + user.getName());
+	}
 
 }
