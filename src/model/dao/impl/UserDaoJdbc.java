@@ -23,7 +23,7 @@ public class UserDaoJdbc implements UserDao {
 		this.conn = conn;
 	}
 	
-	public Optional<User> getUsername(String username) {
+	public Optional<User> getUserByName(String username) {
 		Optional<User> u = Optional.empty();
 
 		try (PreparedStatement st = conn.prepareStatement("SELECT * FROM users WHERE username=?")) {

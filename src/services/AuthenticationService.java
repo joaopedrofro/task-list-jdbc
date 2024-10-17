@@ -15,7 +15,7 @@ public class AuthenticationService {
 	}
 	
 	public boolean authenticate(String username, String password) {
-		Optional<User> u = userDao.getUsername(username);
+		Optional<User> u = userDao.getUserByName(username);
 		boolean authenticated = false;
 		
 		if (u.isPresent()) {

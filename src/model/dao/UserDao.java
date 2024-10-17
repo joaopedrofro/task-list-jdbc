@@ -5,5 +5,5 @@ import java.util.Optional;
 import model.entities.User;
 
 public interface UserDao extends Dao<User> {
-	Optional<User> getUsername(String username);
+	Optional<User> getUserByName(String username);
 }

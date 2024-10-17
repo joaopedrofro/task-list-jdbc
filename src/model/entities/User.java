@@ -16,9 +16,15 @@ public class User implements Serializable {
 	public User() {
 		tasks = new ArrayList<Task>();
 	}
+	
+	public User(Integer id, String name, String username, String password) {
+		this.id = id;
+		this.name = name;
+		this.username = username;
+		this.password = password;
+	}
 
 	public User(Integer id, String name, String username, String password, ArrayList<Task> tasks) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.username = username;
