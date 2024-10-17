@@ -8,51 +8,23 @@ import model.dao.UserDao;
 import model.entities.User;
 import services.AuthenticationService;
 import view.UserView;
-import view.MainView;
+import view.util.InfoMessage;
 
 public class UserController {
 
 	private static UserDao userDao;
+	private Connection conn;
 	private Scanner scan;
 
 	public UserController(Connection conn, Scanner scan) {
+		this.conn = conn;
 		userDao = DaoFactory.getUserDao(conn);
 		this.scan = scan;
 	}
 
-	public void mainMenu() {
-		MainView mainView = new MainView(scan);
-
-		boolean running = true;
-
-		while (running) {
-			int opt = 0;
-
-			try {
-				opt = mainView.menuMainView();
-			} catch (NumberFormatException e) {
-				mainView.invalidChoice();
-				continue;
-			}
-
-			switch (opt) {
-			case 1:
-				userLogin();
-				break;
-			case 2:
-				userRegister();
-				break;
-			case 3:
-				running = false;
-				break;
-			default:
-				mainView.invalidChoice();
-			}
-		}
-	}
-
 	public void userLogin() {
 		UserView view = new UserView(scan);
+		TaskController taskCtrl = new TaskController(conn, scan);
 
 		AuthenticationService auth = new AuthenticationService(userDao);
 
@@ -61,15 +33,17 @@ public class UserController {
 
 			if (data.length > 0) {
 				if (auth.authenticate(data[0], data[1])) {
-					view.successfullyLoginView();
+					taskCtrl.taskList(auth.getUserAuthenticated());
 					break;
 				} else {
-					view.invalidCredentialsView();
+					InfoMessage.showInfoMessage("Invalid credentials", scan);
 				}
 			} else {
 				break;
 			}
 		}
+		
+		auth.logoutUserAuthenticated();
 	}
 
 	public void userRegister() {
@@ -79,10 +53,10 @@ public class UserController {
 
 		if (data.length > 0) {
 			if (userDao.getUserByName(data[1]).isPresent()) {
-				view.userAlreadyExistsView();
+				InfoMessage.showInfoMessage("User already exists", scan);
 			} else {
 				userDao.add(new User(0, data[0], data[1], data[2]));
-				view.successfullyRegisterView();
+				InfoMessage.showInfoMessage("Register successfully", scan);
 			}
 		}
 	}

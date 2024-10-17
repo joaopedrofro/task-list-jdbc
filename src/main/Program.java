@@ -5,19 +5,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import controller.UserController;
+import controller.SystemController;
 import db.Database;
 
 public class Program {
 
 	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		
 		Connection conn = Database.getConnection();
 		initDatabase(conn);
 		
-		Scanner scan = new Scanner(System.in);
-		
-		UserController userController = new UserController(conn, scan);
-		userController.mainMenu();
+		new SystemController(conn, scan).init();
 		
 		Database.closeConnection();
 	}

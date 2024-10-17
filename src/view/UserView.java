@@ -2,6 +2,8 @@ package view;
 
 import java.util.Scanner;
 
+import view.util.InfoMessage;
+
 public class UserView {
 
 	private Scanner scan;
@@ -11,7 +13,7 @@ public class UserView {
 	}
 
 	public String[] showUserLoginView() {
-		MainView.topView();
+		InfoMessage.showSystemInfo();
 
 		System.out.print("\nUsername: ");
 		String username = scan.nextLine();
@@ -27,7 +29,7 @@ public class UserView {
 	}
 
 	public String[] showUserRegisterView() {
-		MainView.topView();
+		InfoMessage.showSystemInfo();
 
 		System.out.println("\nRegister new user");
 
@@ -42,24 +44,5 @@ public class UserView {
 
 		return new String[] { name, username, password };
 	}
-
-	public void invalidCredentialsView() {
-		System.out.println("\nIncorrect credentials! Press Enter to continue...");
-		scan.nextLine();
-	}
-
-	public void successfullyLoginView() {
-		System.out.println("\nLogin successfully! Press Enter to continue...");
-		scan.nextLine();
-	}
 	
-	public void successfullyRegisterView() {
-		System.out.println("\nRegistred successfully! Press Enter to continue...");
-		scan.nextLine();
-	}
-	
-	public void userAlreadyExistsView() {
-		System.out.println("\nUsername already in use! Press Enter to continue...");
-		scan.nextLine();
-	}
 }

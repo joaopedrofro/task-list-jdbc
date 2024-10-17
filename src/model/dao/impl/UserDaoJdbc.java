@@ -70,7 +70,9 @@ public class UserDaoJdbc implements UserDao {
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
-				users.add(instantiateUser(rs));
+				User user = instantiateUser(rs);
+				user.getTasks().addAll(getUserTaskList(user));
+				users.add(user);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -127,9 +129,9 @@ public class UserDaoJdbc implements UserDao {
 	private List<Task> getUserTaskList(User user) {
 		List<Task> tasks = new ArrayList<Task>();
 
-		try (PreparedStatement st2 = conn.prepareStatement("SELECT * FROM tasks WHERE user_id=?")) {
-			st2.setInt(1, user.getId());
-			ResultSet rs = st2.executeQuery();
+		try (PreparedStatement st = conn.prepareStatement("SELECT * FROM tasks WHERE user_id=?")) {
+			st.setInt(1, user.getId());
+			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
 				Task t = new Task();
