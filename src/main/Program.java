@@ -5,37 +5,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import controller.UserController;
 import db.Database;
-import model.dao.DaoFactory;
-import model.dao.UserDao;
-import services.AuthenticationService;
 
 public class Program {
 
 	public static void main(String[] args) {
 		Connection conn = Database.getConnection();
-		
 		initDatabase(conn);
 		
-		Scanner sc = new Scanner(System.in);
+		Scanner scan = new Scanner(System.in);
 		
-		UserDao ud = DaoFactory.getUserDao(conn);
+		UserController userController = new UserController(conn, scan);
+		userController.mainMenu();
 		
-		AuthenticationService auth = new AuthenticationService(ud);
-		
-		System.out.print("Username: ");
-		String username = sc.nextLine();
-		System.out.print("Password: ");
-		String password = sc.nextLine();
-		
-		if (auth.authenticate(username, password)) {
-			System.out.println("Login sucessfully!");
-			System.out.println(auth.getUserAuthenticated());
-		} else {
-			System.out.println("Invalid credentials!");
-		}
-
-		sc.close();
 		Database.closeConnection();
 	}
 	
