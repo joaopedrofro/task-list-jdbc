@@ -1,5 +1,6 @@
 package db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,7 +13,8 @@ public class Database {
 
 	public static Connection getConnection() {
 		if (conn == null) {
-			String url = "jdbc:sqlite:sqlite.db";
+			String userHomePath = System.getProperty("user.home");
+			String url = "jdbc:sqlite:" + userHomePath + File.separator + "taskapp.db";
 			
 			try {
 				conn = DriverManager.getConnection(url);
