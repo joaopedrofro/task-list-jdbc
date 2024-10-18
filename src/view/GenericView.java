@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import model.entities.User;
 import util.Scan;
 
 public abstract class GenericView {
@@ -20,7 +19,7 @@ public abstract class GenericView {
 		scanner.nextLine();
 	}
 
-	public static void showSystemInfo() {
+	protected static void showSystemInfo() {
 		System.out.println("\n".repeat(30));
 		System.out.println("TASKAPP SYSTEM");
 		System.out.println("======================");
@@ -28,8 +27,8 @@ public abstract class GenericView {
 		System.out.println("Version: 0.0.1-a");
 	}
 
-	public static void showSystemAndUserInfo(User user) {
+	protected void showSystemAndUserInfo(String userName) {
 		showSystemInfo();
-		System.out.println("User: " + user.getName());
+		System.out.println("User: " + userName);
 	}
 }

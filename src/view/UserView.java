@@ -1,38 +1,50 @@
 package view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import view.exceptions.InvalidInputData;
+
 public class UserView extends GenericView {
 
-	public String[] showUserLoginView() {
+	public Map<String, String> getUserCredentials() {
 		showSystemInfo();
+		
+		Map<String, String> userCredentials = new HashMap<String, String>();
 
 		System.out.print("\nUsername: ");
-		String username = scanner.nextLine();
-
-		if (username.equals("exit")) {
-			return new String[] {};
-		}
-
+		userCredentials.put("username", scanner.nextLine());
+		
 		System.out.print("Password: ");
-		String password = scanner.nextLine();
+		userCredentials.put("password", scanner.nextLine());
 
-		return new String[] { username, password };
+		return userCredentials;
 	}
 
-	public String[] showUserRegisterView() {
+	public Map<String, String> getUserData() throws InvalidInputData {
 		showSystemInfo();
 
-		System.out.println("\nRegister new user");
+		Map<String, String> userData = new HashMap<String, String>();
 
-		System.out.print("\nName: ");
-		String name = scanner.nextLine();
+		System.out.println("\nNew user registration:");
+
+		System.out.print("\nFull name: ");
+		userData.put("name", scanner.nextLine());
 
 		System.out.print("Username: ");
-		String username = scanner.nextLine();
+		userData.put("username", scanner.nextLine());
 
 		System.out.print("Password: ");
-		String password = scanner.nextLine();
+		userData.put("password", scanner.nextLine());
 
-		return new String[] { name, username, password };
+		for (String data : userData.values()) {
+			if (data.isEmpty() || data.isBlank()) {
+				throw new InvalidInputData(
+						"You did not provide any of the requested data or only used blank spaces. Please, try again");
+			}
+		}
+
+		return userData;
 	}
-	
+
 }

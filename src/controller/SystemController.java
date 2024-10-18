@@ -7,7 +7,7 @@ public class SystemController extends GenericView {
 
 	public void run() {
 		SystemView systemView = new SystemView();
-		UserController userCtrl = new UserController();
+		UserController userController = new UserController();
 
 		boolean running = true;
 
@@ -23,10 +23,10 @@ public class SystemController extends GenericView {
 
 			switch (option) {
 			case 1:
-				userCtrl.userLogin();
+				userController.userLogin();
 				break;
 			case 2:
-				userCtrl.userRegister();
+				userController.userRegister();
 				break;
 			case 3:
 				running = false;

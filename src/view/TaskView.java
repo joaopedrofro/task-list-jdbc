@@ -4,57 +4,53 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import model.entities.Task;
-import model.entities.User;
 
 public class TaskView extends GenericView {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-	private User user;
+	private String userName;
 
-	public TaskView(User user) {
-		this.user = user;
+	public TaskView(String userName) {
+		this.userName = userName;
 	}
 
-	public Integer getTaskMenuOptionView() {
+	public Integer getTaskMenuOption() {
 		System.out.println("\nOPTIONS:");
 		System.out.println("1 - Add task");
 		System.out.println("2 - Mark task as done");
 		System.out.println("3 - Unmark done task");
 		System.out.println("4 - Delete task");
 		System.out.println("5 - Return");
-		System.out.print("\nChoice: ");
+		System.out.print("\nEnter option: ");
 
 		return Integer.parseInt(scanner.nextLine());
 	}
 
-	public void showTaskView() {
-		showSystemAndUserInfo(user);
+	public void displayUserTasks(List<Task> userTasks) {
+		showSystemAndUserInfo(userName);
 
 		System.out.println("\nTasks:\n");
 
-		List<Task> userTasks = user.getTasks();
-
-		showTasks(userTasks);
-	}
-
-	private void showTasks(List<Task> userTasks) {
 		if (userTasks.isEmpty()) {
-			System.out.println("No tasks created yet!");
+			System.out.println("\nNo tasks to show!\n");
 		} else {
 			for (int i = 0; i < userTasks.size(); i++) {
 				Task t = userTasks.get(i);
+
 				System.out.print((i + 1) + " - ");
+
 				if (t.getDone())
 					System.out.printf("[x]");
 				else
 					System.out.printf("[ ]");
+
 				System.out.printf(" %s [%s]\n", t.getTitle(), sdf.format(t.getMoment()));
 			}
 		}
 	}
 
-	public String addTaskView() {
-		showSystemAndUserInfo(user);
+	public String getTitleForNewTask() {
+		showSystemAndUserInfo(userName);
 
 		System.out.println("\nAdd task:\n");
 		System.out.print("Title: ");
@@ -62,18 +58,16 @@ public class TaskView extends GenericView {
 
 		return title;
 	}
-
-	public Task doneTaskView() {
-		List<Task> undoneTasks = user.getTasks().stream().filter(t -> !t.getDone()).toList();
-
+	
+	public Task getTaskToPerformAction(List<Task> userTasks, String menuMessage) {
 		boolean running = true;
 
 		while (running) {
-			showSystemAndUserInfo(user);
+			showSystemAndUserInfo(userName);
 			System.out.println();
-			showTasks(undoneTasks);
+			displayUserTasks(userTasks);
 
-			System.out.println("\nComplete task:\n");
+			System.out.println("\n" + menuMessage);
 			System.out.print("\nTask number: ");
 
 			try {
@@ -84,9 +78,8 @@ public class TaskView extends GenericView {
 					break;
 				} else {
 					int taskOption = Integer.parseInt(opt) - 1;
-					Task doneTask = undoneTasks.get(taskOption);
-					doneTask.setDone(true);
-					return doneTask;
+					Task task = userTasks.get(taskOption);
+					return task;
 				}
 			} catch (IndexOutOfBoundsException | NumberFormatException e) {
 				showInfoMessage("Invalid option");
@@ -96,16 +89,4 @@ public class TaskView extends GenericView {
 		return null;
 	}
 
-	public void undoneTaskView() {
-		showTaskView();
-		System.out.println("\nUndone task:\n");
-		System.out.print("\nTask number:");
-
-		try {
-			int taskOption = Integer.parseInt(scanner.nextLine()) - 1;
-			user.getTasks().get(taskOption).setDone(true);
-		} catch (IndexOutOfBoundsException | NumberFormatException e) {
-			showInfoMessage("Invalid option");
-		}
-	}
 }
