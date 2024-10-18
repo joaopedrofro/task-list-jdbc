@@ -1,30 +1,22 @@
 package controller;
 
-import java.sql.Connection;
-import java.util.Scanner;
-
 import model.dao.DaoFactory;
 import model.dao.UserDao;
 import model.entities.User;
 import services.AuthenticationService;
 import view.UserView;
-import view.util.InfoMessage;
 
-public class UserController {
+public class UserController extends GenericController {
 
-	private static UserDao userDao;
-	private Connection conn;
-	private Scanner scan;
+	private UserDao userDao;
 
-	public UserController(Connection conn, Scanner scan) {
-		this.conn = conn;
+	public UserController() {
 		userDao = DaoFactory.getUserDao(conn);
-		this.scan = scan;
 	}
 
 	public void userLogin() {
-		UserView view = new UserView(scan);
-		TaskController taskCtrl = new TaskController(conn, scan);
+		UserView view = new UserView();
+		TaskController taskCtrl = new TaskController();
 
 		AuthenticationService auth = new AuthenticationService(userDao);
 
@@ -36,7 +28,7 @@ public class UserController {
 					taskCtrl.taskList(auth.getUserAuthenticated());
 					break;
 				} else {
-					InfoMessage.showInfoMessage("Invalid credentials", scan);
+					UserView.showInfoMessage("Invalid credentials");
 				}
 			} else {
 				break;
@@ -47,16 +39,16 @@ public class UserController {
 	}
 
 	public void userRegister() {
-		UserView view = new UserView(scan);
+		UserView view = new UserView();
 
 		String[] data = view.showUserRegisterView();
 
 		if (data.length > 0) {
 			if (userDao.getUserByName(data[1]).isPresent()) {
-				InfoMessage.showInfoMessage("User already exists", scan);
+				UserView.showInfoMessage("User already exists");
 			} else {
 				userDao.add(new User(0, data[0], data[1], data[2]));
-				InfoMessage.showInfoMessage("Register successfully", scan);
+				UserView.showInfoMessage("Register successfully");
 			}
 		}
 	}

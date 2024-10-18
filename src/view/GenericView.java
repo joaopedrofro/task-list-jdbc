@@ -1,16 +1,23 @@
-package view.util;
+package view;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
 import model.entities.User;
+import util.Scan;
 
-public class InfoMessage {
+public abstract class GenericView {
 
-	public static void showInfoMessage(String message, Scanner scan) {
+	protected static Scanner scanner;
+
+	public GenericView() {
+		scanner = Scan.getScanInstance();
+	}
+
+	public static void showInfoMessage(String message) {
 		System.out.println("\n" + message + "! Press Enter to continue...");
-		scan.nextLine();
+		scanner.nextLine();
 	}
 
 	public static void showSystemInfo() {
@@ -20,14 +27,9 @@ public class InfoMessage {
 		System.out.println("Date: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 		System.out.println("Version: 0.0.1-a");
 	}
-	
-	public static void showUserInfo(User user) {
-		System.out.println("User: " + user.getName());
-	}
-	
+
 	public static void showSystemAndUserInfo(User user) {
 		showSystemInfo();
 		System.out.println("User: " + user.getName());
 	}
-
 }

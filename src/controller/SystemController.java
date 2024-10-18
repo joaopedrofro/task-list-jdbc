@@ -1,38 +1,27 @@
 package controller;
 
-import java.sql.Connection;
-import java.util.Scanner;
-
+import view.GenericView;
 import view.SystemView;
-import view.util.InfoMessage;
 
-public class SystemController {
+public class SystemController extends GenericView {
 
-	private Connection conn;
-	private Scanner scan;
-
-	public SystemController(Connection conn, Scanner scan) {
-		this.conn = conn;
-		this.scan = scan;
-	}
-
-	public void init() {
-		SystemView systemView = new SystemView(scan);
-		UserController userCtrl = new UserController(conn, scan);
+	public void run() {
+		SystemView systemView = new SystemView();
+		UserController userCtrl = new UserController();
 
 		boolean running = true;
 
 		while (running) {
-			int opt = 0;
+			int option = 0;
 
 			try {
-				opt = systemView.showSystemView();
+				option = systemView.getOptionFromMenu();
 			} catch (NumberFormatException e) {
-				InfoMessage.showInfoMessage("Invalid option", scan);
+				SystemView.showInfoMessage("Invalid option");
 				continue;
 			}
 
-			switch (opt) {
+			switch (option) {
 			case 1:
 				userCtrl.userLogin();
 				break;
@@ -43,7 +32,7 @@ public class SystemController {
 				running = false;
 				break;
 			default:
-				InfoMessage.showInfoMessage("Invalid option", scan);
+				SystemView.showInfoMessage("Invalid option");
 			}
 		}
 	}

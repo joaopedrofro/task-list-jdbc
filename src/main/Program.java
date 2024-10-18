@@ -3,21 +3,20 @@ package main;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Scanner;
 
 import controller.SystemController;
 import db.Database;
+import util.Scan;
 
 public class Program {
 
 	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		
 		Connection conn = Database.getConnection();
 		initDatabase(conn);
 		
-		new SystemController(conn, scan).init();
+		new SystemController().run();
 		
+		Scan.closeScan();
 		Database.closeConnection();
 	}
 	

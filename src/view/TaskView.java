@@ -2,20 +2,16 @@ package view;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Scanner;
 
 import model.entities.Task;
 import model.entities.User;
-import view.util.InfoMessage;
 
-public class TaskView {
+public class TaskView extends GenericView {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-	private Scanner scan;
 	private User user;
 
-	public TaskView(Scanner scan, User user) {
-		this.scan = scan;
+	public TaskView(User user) {
 		this.user = user;
 	}
 
@@ -28,11 +24,11 @@ public class TaskView {
 		System.out.println("5 - Return");
 		System.out.print("\nChoice: ");
 
-		return Integer.parseInt(scan.nextLine());
+		return Integer.parseInt(scanner.nextLine());
 	}
 
 	public void showTaskView() {
-		InfoMessage.showSystemAndUserInfo(user);
+		showSystemAndUserInfo(user);
 
 		System.out.println("\nTasks:\n");
 
@@ -58,11 +54,11 @@ public class TaskView {
 	}
 
 	public String addTaskView() {
-		InfoMessage.showSystemAndUserInfo(user);
+		showSystemAndUserInfo(user);
 
 		System.out.println("\nAdd task:\n");
 		System.out.print("Title: ");
-		String title = scan.nextLine();
+		String title = scanner.nextLine();
 
 		return title;
 	}
@@ -73,7 +69,7 @@ public class TaskView {
 		boolean running = true;
 
 		while (running) {
-			InfoMessage.showSystemAndUserInfo(user);
+			showSystemAndUserInfo(user);
 			System.out.println();
 			showTasks(undoneTasks);
 
@@ -81,7 +77,7 @@ public class TaskView {
 			System.out.print("\nTask number: ");
 
 			try {
-				String opt = scan.nextLine();
+				String opt = scanner.nextLine();
 
 				if (opt.equals("exit")) {
 					running = false;
@@ -93,7 +89,7 @@ public class TaskView {
 					return doneTask;
 				}
 			} catch (IndexOutOfBoundsException | NumberFormatException e) {
-				InfoMessage.showInfoMessage("Invalid option", scan);
+				showInfoMessage("Invalid option");
 			}
 		}
 
@@ -106,10 +102,10 @@ public class TaskView {
 		System.out.print("\nTask number:");
 
 		try {
-			int taskOption = Integer.parseInt(scan.nextLine()) - 1;
+			int taskOption = Integer.parseInt(scanner.nextLine()) - 1;
 			user.getTasks().get(taskOption).setDone(true);
 		} catch (IndexOutOfBoundsException | NumberFormatException e) {
-			InfoMessage.showInfoMessage("Invalid option", scan);
+			showInfoMessage("Invalid option");
 		}
 	}
 }
