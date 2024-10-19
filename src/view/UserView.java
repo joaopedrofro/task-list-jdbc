@@ -21,11 +21,11 @@ public class UserView extends GenericView {
 		return userCredentials;
 	}
 
-	public Map<String, String> getUserData(){
+	public Map<String, String> getUserData() {
 		showSystemInfo();
 
 		Map<String, String> userData = new HashMap<String, String>();
- 
+
 		System.out.println("\nCADASTRAR NOVO USUÁRIO");
 		userData.put("name", getUserInput("\nNome completo"));
 		userData.put("username", getUserInput("Usuário"));

@@ -21,7 +21,7 @@ public class TaskView extends GenericView {
 		System.out.println("3 - Desmarcar tarefa concluída");
 		System.out.println("4 - Excluir tarefa");
 		System.out.println("5 - Voltar");
-		
+
 		return Integer.parseInt(getUserInput("\nOPÇÃO"));
 	}
 
@@ -66,7 +66,7 @@ public class TaskView extends GenericView {
 			displayUserTasks(userTasks);
 
 			System.out.println("\n" + menuMessage);
-			
+
 			try {
 				String opt = getUserInput("\nNúmero da tarefa");
 

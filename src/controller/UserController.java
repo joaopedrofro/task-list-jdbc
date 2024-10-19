@@ -42,15 +42,13 @@ public class UserController extends GenericController {
 	public void userRegister() throws NoSuchElementException {
 		UserView userView = new UserView();
 
-		boolean running = true;
-
 		while (true) {
 			Map<String, String> userData = userView.getUserData();
 
 			if (userData.values().stream().allMatch(v -> v.isEmpty())) {
 				break;
 			}
-			
+
 			if (userData.values().stream().anyMatch(v -> v.isEmpty() || v.isBlank())) {
 				UserView.showInfoMessage("Os dados não podem ser vazios ou em branco");
 				continue;
