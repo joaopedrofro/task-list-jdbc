@@ -10,13 +10,8 @@ public class UserView extends GenericView {
 		showSystemInfo();
 
 		Map<String, String> userCredentials = new HashMap<String, String>();
-
-		try {
-			userCredentials.put("username", getUserInput("\nUsuário"));
-			userCredentials.put("password", getUserPasswordInput("Senha"));
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+		userCredentials.put("username", getUserInput("\nUsuário"));
+		userCredentials.put("password", getUserPasswordInput("Senha"));
 
 		return userCredentials;
 	}

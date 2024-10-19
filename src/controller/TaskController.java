@@ -44,6 +44,7 @@ public class TaskController extends GenericController {
 				Task newTask = new Task(0, taskTitle, new Date(), false, user.getId());
 				taskDao.add(newTask);
 				user.getTasks().add(newTask);
+
 				break;
 			case 2:
 				List<Task> undoneTasks = user.getTasks().stream().filter(t -> t.getDone() == false).toList();
@@ -73,18 +74,23 @@ public class TaskController extends GenericController {
 				}
 				break;
 			case 4:
-				Task taskToDelete = taskView.getTaskToPerformAction(user.getTasks(), "DELETAR TAREFA");
+				List<Task> tasksToDelete = user.getTasks();
+				if (tasksToDelete.isEmpty()) {
+					TaskView.showInfoMessage("Não há tarefas para excluir");
+				} else {
+					Task taskToDelete = taskView.getTaskToPerformAction(tasksToDelete, "DELETAR TAREFA");
 
-				if (taskToDelete != null) {
-					user.getTasks().remove(taskToDelete);
-					taskDao.delete(taskToDelete);
+					if (taskToDelete != null) {
+						user.getTasks().remove(taskToDelete);
+						taskDao.delete(taskToDelete);
+					}
 				}
 				break;
 			case 5:
 				running = false;
 				break;
 			default:
-				TaskView.showInfoMessage("Invalid option");
+				TaskView.showInfoMessage("Opção inválida");
 			}
 		}
 	}

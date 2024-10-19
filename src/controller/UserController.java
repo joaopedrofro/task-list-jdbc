@@ -59,6 +59,7 @@ public class UserController extends GenericController {
 			} else {
 				userDao.add(new User(0, userData.get("name"), userData.get("username"), userData.get("password")));
 				UserView.showInfoMessage("Registro feito");
+				break;
 			}
 		}
 	}
