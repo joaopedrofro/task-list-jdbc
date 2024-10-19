@@ -15,24 +15,23 @@ public class TaskView extends GenericView {
 	}
 
 	public Integer getTaskMenuOption() {
-		System.out.println("\nOPTIONS:");
-		System.out.println("1 - Add task");
-		System.out.println("2 - Mark task as done");
-		System.out.println("3 - Unmark done task");
-		System.out.println("4 - Delete task");
-		System.out.println("5 - Return");
-		System.out.print("\nEnter option: ");
-
-		return Integer.parseInt(scanner.nextLine());
+		System.out.println("\nMENU DE TAREFAS\n");
+		System.out.println("1 - Adicionar tarefa");
+		System.out.println("2 - Concluir tarefa");
+		System.out.println("3 - Desmarcar tarefa concluída");
+		System.out.println("4 - Excluir tarefa");
+		System.out.println("5 - Voltar");
+		
+		return Integer.parseInt(getUserInput("\nOPÇÃO"));
 	}
 
 	public void displayUserTasks(List<Task> userTasks) {
 		showSystemAndUserInfo(userName);
 
-		System.out.println("\nTasks:\n");
+		System.out.println("\nTAREFAS:");
 
 		if (userTasks.isEmpty()) {
-			System.out.println("\nNo tasks to show!\n");
+			System.out.println("Sem tarefas para mostrar aqui!");
 		} else {
 			for (int i = 0; i < userTasks.size(); i++) {
 				Task t = userTasks.get(i);
@@ -52,13 +51,12 @@ public class TaskView extends GenericView {
 	public String getTitleForNewTask() {
 		showSystemAndUserInfo(userName);
 
-		System.out.println("\nAdd task:\n");
-		System.out.print("Title: ");
-		String title = scanner.nextLine();
+		System.out.println("\nCRIAR TAREFA\n");
+		String title = getUserInput("Nome da tarefa");
 
 		return title;
 	}
-	
+
 	public Task getTaskToPerformAction(List<Task> userTasks, String menuMessage) {
 		boolean running = true;
 
@@ -68,10 +66,9 @@ public class TaskView extends GenericView {
 			displayUserTasks(userTasks);
 
 			System.out.println("\n" + menuMessage);
-			System.out.print("\nTask number: ");
-
+			
 			try {
-				String opt = scanner.nextLine();
+				String opt = getUserInput("\nNúmero da tarefa");
 
 				if (opt.equals("exit")) {
 					running = false;
@@ -82,7 +79,7 @@ public class TaskView extends GenericView {
 					return task;
 				}
 			} catch (IndexOutOfBoundsException | NumberFormatException e) {
-				showInfoMessage("Invalid option");
+				showInfoMessage("Opção inválida");
 			}
 		}
 

@@ -4,18 +4,18 @@ import java.util.Scanner;
 
 public abstract class Scan {
 	
-	private static Scanner scan;
+	private static Scanner scanner;
 	
 	public static Scanner getScanInstance() {
-		if (scan == null) {
-			scan = new Scanner(System.in);
-			return scan;
+		if (scanner == null) {
+			scanner = new Scanner(System.in);
+			return scanner;
 		} else {
-			return scan;
+			return scanner;
 		}
 	}
 	
-	public static void closeScan() {
-		scan.close();
+	public static void closeScanner() {
+		scanner.close();
 	}
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import model.dao.DaoFactory;
 import model.dao.UserDao;
@@ -24,35 +25,45 @@ public class UserController extends GenericController {
 		while (true) {
 			Map<String, String> userCredentials = userView.getUserCredentials();
 
+			if (userCredentials.get("username").isEmpty()) {
+				break;
+			}
+
 			if (auth.authenticate(userCredentials.get("username"), userCredentials.get("password"))) {
 				TaskController taskController = new TaskController(auth.getUserAuthenticated());
 				taskController.displayUserTasksMenu();
+				auth.logoutUserAuthenticated();
 				break;
 			} else {
-				UserView.showInfoMessage("Invalid credentials");
+				UserView.showInfoMessage("Usuário ou senha inválidos");
 			}
-
 		}
-
-		auth.logoutUserAuthenticated();
 	}
 
-	public void userRegister() {
+	public void userRegister() throws NoSuchElementException {
 		UserView userView = new UserView();
+		
+		boolean running = true;
 
-		try {
-			Map<String, String> userData = userView.getUserData();
-
-			if (userDao.getUserByName(userData.get("username")).isPresent()) {
-				UserView.showInfoMessage("Username already in use. Please, choose another");
-			} else {
-				userDao.add(new User(0, userData.get("name"), userData.get("username"), userData.get("password")));
-				UserView.showInfoMessage("Successfully registered");
+		while (running) {
+			try {
+				Map<String, String> userData = userView.getUserData();
+				
+				if (userData.get("name").isEmpty()) {
+					running = false;
+					break;
+				}
+	
+				if (userDao.getUserByName(userData.get("username")).isPresent()) {
+					UserView.showInfoMessage("Nome de usuário já em uso. Por favor, escolha outro");
+				} else {
+					userDao.add(new User(0, userData.get("name"), userData.get("username"), userData.get("password")));
+					UserView.showInfoMessage("Registro feito");
+				}
+			} catch (InvalidInputData e) {
+				UserView.showInfoMessage(e.getMessage());
 			}
-		} catch (InvalidInputData e) {
-			UserView.showInfoMessage(e.getMessage());
 		}
-
 	}
 
 }

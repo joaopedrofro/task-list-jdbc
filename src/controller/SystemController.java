@@ -12,14 +12,7 @@ public class SystemController extends GenericView {
 		boolean running = true;
 
 		while (running) {
-			int option = 0;
-
-			try {
-				option = systemView.getOptionFromMenu();
-			} catch (NumberFormatException e) {
-				SystemView.showInfoMessage("Invalid option");
-				continue;
-			}
+			int option = systemView.getOptionFromMenu();
 
 			switch (option) {
 			case 1:
@@ -32,7 +25,7 @@ public class SystemController extends GenericView {
 				running = false;
 				break;
 			default:
-				SystemView.showInfoMessage("Invalid option");
+				SystemView.showInfoMessage("Opção inválida");
 			}
 		}
 	}

@@ -4,16 +4,24 @@ public class SystemView extends GenericView {
 
 	private void showMenu() {
 		showSystemInfo();
-		System.out.println("\nOPTIONS:");
-		System.out.println("1 - Login");
-		System.out.println("2 - Register");
-		System.out.println("3 - Exit");
-		System.out.print("\nChoice: ");
+		System.out.println("\nMENU PRINCIPAL\n");
+		System.out.println("1 - Entrar");
+		System.out.println("2 - Cadastrar usuário");
+		System.out.println("3 - Sair");
 	}
 	
 	public Integer getOptionFromMenu() {
 		showMenu();
-		return Integer.parseInt(scanner.nextLine());
+		
+		int option = 0;
+		
+		try {
+			option = Integer.parseInt(getUserInput("\nOPÇÃO"));
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+		
+		return option;
 	}
 
 }

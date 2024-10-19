@@ -2,46 +2,46 @@ package view;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import view.exceptions.InvalidInputData;
 
 public class UserView extends GenericView {
 
-	public Map<String, String> getUserCredentials() {
+	public Map<String, String> getUserCredentials() throws NoSuchElementException {
 		showSystemInfo();
-		
+
 		Map<String, String> userCredentials = new HashMap<String, String>();
 
-		System.out.print("\nUsername: ");
-		userCredentials.put("username", scanner.nextLine());
-		
-		System.out.print("Password: ");
-		userCredentials.put("password", scanner.nextLine());
+		try {
+			userCredentials.put("username", getUserInput("\nUsuário"));
+			userCredentials.put("password", getUserPasswordInput("Senha"));
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
 
 		return userCredentials;
 	}
 
-	public Map<String, String> getUserData() throws InvalidInputData {
+	public Map<String, String> getUserData() throws InvalidInputData, NoSuchElementException {
 		showSystemInfo();
 
 		Map<String, String> userData = new HashMap<String, String>();
 
-		System.out.println("\nNew user registration:");
+		try {
+			System.out.println("\nCADASTRAR NOVO USUÁRIO");
 
-		System.out.print("\nFull name: ");
-		userData.put("name", scanner.nextLine());
+			userData.put("name", getUserInput("\nNome completo"));
+			userData.put("username", getUserInput("Usuário"));
+			userData.put("password", getUserPasswordInput("Senha"));
 
-		System.out.print("Username: ");
-		userData.put("username", scanner.nextLine());
-
-		System.out.print("Password: ");
-		userData.put("password", scanner.nextLine());
-
-		for (String data : userData.values()) {
-			if (data.isEmpty() || data.isBlank()) {
-				throw new InvalidInputData(
-						"You did not provide any of the requested data or only used blank spaces. Please, try again");
+			for (String data : userData.values()) {
+				if (data.isEmpty() || data.isBlank()) {
+					throw new InvalidInputData("Os dados não podem ser vazios ou conter somente espaços em branco");
+				}
 			}
+		} catch (NoSuchElementException e) {
+			throw e;
 		}
 
 		return userData;

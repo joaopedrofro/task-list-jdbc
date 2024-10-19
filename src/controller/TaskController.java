@@ -33,41 +33,48 @@ public class TaskController extends GenericController {
 						user.getTasks().stream().sorted(Comparator.comparing(Task::getDone)).toList());
 				option = taskView.getTaskMenuOption();
 			} catch (NumberFormatException e) {
-				TaskView.showInfoMessage("Invalid option");
+				TaskView.showInfoMessage("Opção inválida");
 				continue;
 			}
 
 			switch (option) {
 			case 1:
 				String taskTitle = taskView.getTitleForNewTask();
-				
+
 				Task newTask = new Task(0, taskTitle, new Date(), false, user.getId());
 				taskDao.add(newTask);
 				user.getTasks().add(newTask);
-				
-				TaskView.showInfoMessage("Task created");
 				break;
 			case 2:
 				List<Task> undoneTasks = user.getTasks().stream().filter(t -> t.getDone() == false).toList();
-				Task taskToDone = taskView.getTaskToPerformAction(undoneTasks, "Complete Task");
-				
-				if (taskToDone != null) {
-					taskToDone.setDone(true);
-					taskDao.update(taskToDone);
+				if (undoneTasks.isEmpty()) {
+					TaskView.showInfoMessage("Não há tarefas para concluir");
+				} else {
+					Task taskToDone = taskView.getTaskToPerformAction(undoneTasks, "COMPLETAR TAREFA");
+
+					if (taskToDone != null) {
+						taskToDone.setDone(true);
+						taskDao.update(taskToDone);
+					}
 				}
+
 				break;
 			case 3:
 				List<Task> doneTasks = user.getTasks().stream().filter(t -> t.getDone()).toList();
-				Task taskToUndone = taskView.getTaskToPerformAction(doneTasks, "Undone Task");
-				
-				if (taskToUndone != null) {
-					taskToUndone.setDone(false);
-					taskDao.update(taskToUndone);
+				if (doneTasks.isEmpty()) {
+					TaskView.showInfoMessage("Não há tarefas para desmarcar");
+				} else {
+					Task taskToUndone = taskView.getTaskToPerformAction(doneTasks, "DESMARCAR TAREFA");
+
+					if (taskToUndone != null) {
+						taskToUndone.setDone(false);
+						taskDao.update(taskToUndone);
+					}
 				}
 				break;
 			case 4:
-				Task taskToDelete = taskView.getTaskToPerformAction(user.getTasks(), "Delete Task");
-				
+				Task taskToDelete = taskView.getTaskToPerformAction(user.getTasks(), "DELETAR TAREFA");
+
 				if (taskToDelete != null) {
 					user.getTasks().remove(taskToDelete);
 					taskDao.delete(taskToDelete);
