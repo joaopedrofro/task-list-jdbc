@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import view.exceptions.InvalidInputData;
-
 public class UserView extends GenericView {
 
 	public Map<String, String> getUserCredentials() throws NoSuchElementException {
@@ -23,26 +21,15 @@ public class UserView extends GenericView {
 		return userCredentials;
 	}
 
-	public Map<String, String> getUserData() throws InvalidInputData, NoSuchElementException {
+	public Map<String, String> getUserData(){
 		showSystemInfo();
 
 		Map<String, String> userData = new HashMap<String, String>();
-
-		try {
-			System.out.println("\nCADASTRAR NOVO USUÁRIO");
-
-			userData.put("name", getUserInput("\nNome completo"));
-			userData.put("username", getUserInput("Usuário"));
-			userData.put("password", getUserPasswordInput("Senha"));
-
-			for (String data : userData.values()) {
-				if (data.isEmpty() || data.isBlank()) {
-					throw new InvalidInputData("Os dados não podem ser vazios ou conter somente espaços em branco");
-				}
-			}
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+ 
+		System.out.println("\nCADASTRAR NOVO USUÁRIO");
+		userData.put("name", getUserInput("\nNome completo"));
+		userData.put("username", getUserInput("Usuário"));
+		userData.put("password", getUserPasswordInput("Senha"));
 
 		return userData;
 	}

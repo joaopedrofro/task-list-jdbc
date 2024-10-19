@@ -8,7 +8,6 @@ import model.dao.UserDao;
 import model.entities.User;
 import services.AuthenticationService;
 import view.UserView;
-import view.exceptions.InvalidInputData;
 
 public class UserController extends GenericController {
 
@@ -42,26 +41,26 @@ public class UserController extends GenericController {
 
 	public void userRegister() throws NoSuchElementException {
 		UserView userView = new UserView();
-		
+
 		boolean running = true;
 
-		while (running) {
-			try {
-				Map<String, String> userData = userView.getUserData();
-				
-				if (userData.get("name").isEmpty()) {
-					running = false;
-					break;
-				}
-	
-				if (userDao.getUserByName(userData.get("username")).isPresent()) {
-					UserView.showInfoMessage("Nome de usuário já em uso. Por favor, escolha outro");
-				} else {
-					userDao.add(new User(0, userData.get("name"), userData.get("username"), userData.get("password")));
-					UserView.showInfoMessage("Registro feito");
-				}
-			} catch (InvalidInputData e) {
-				UserView.showInfoMessage(e.getMessage());
+		while (true) {
+			Map<String, String> userData = userView.getUserData();
+
+			if (userData.values().stream().allMatch(v -> v.isEmpty())) {
+				break;
+			}
+			
+			if (userData.values().stream().anyMatch(v -> v.isEmpty() || v.isBlank())) {
+				UserView.showInfoMessage("Os dados não podem ser vazios ou em branco");
+				continue;
+			}
+
+			if (userDao.getUserByName(userData.get("username")).isPresent()) {
+				UserView.showInfoMessage("Nome de usuário já em uso. Por favor, escolha outro");
+			} else {
+				userDao.add(new User(0, userData.get("name"), userData.get("username"), userData.get("password")));
+				UserView.showInfoMessage("Registro feito");
 			}
 		}
 	}
