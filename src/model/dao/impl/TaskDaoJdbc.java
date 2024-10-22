@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import model.dao.TaskDao;
+import model.dao.exceptions.DatabaseQueryException;
 import model.entities.Task;
 
 public class TaskDaoJdbc implements TaskDao {
@@ -23,7 +24,7 @@ public class TaskDaoJdbc implements TaskDao {
 	}
 
 	@Override
-	public Optional<Task> getById(Integer id) {
+	public Optional<Task> getById(Integer id) throws DatabaseQueryException {
 		Optional<Task> task = Optional.empty();
 
 		try (PreparedStatement st = conn.prepareStatement("SELECT * FROM tasks WHERE id=?")) {
@@ -32,10 +33,10 @@ public class TaskDaoJdbc implements TaskDao {
 			ResultSet rs = st.executeQuery();
 
 			if (rs.next()) {
-				task = Optional.of(instantiateTask(rs));
+				task = Optional.ofNullable(instantiateTask(rs));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DatabaseQueryException("Error when trying to retrieve task by id in the database", e);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +45,7 @@ public class TaskDaoJdbc implements TaskDao {
 	}
 
 	@Override
-	public List<Task> getAll() {
+	public List<Task> getAll() throws DatabaseQueryException {
 		List<Task> tasks = new ArrayList<Task>();
 
 		try (PreparedStatement st = conn.prepareStatement("SELECT * FROM tasks")) {
@@ -54,7 +55,7 @@ public class TaskDaoJdbc implements TaskDao {
 				tasks.add(instantiateTask(rs));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DatabaseQueryException("Error when trying to retrieve all tasks in the database", e);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -63,7 +64,7 @@ public class TaskDaoJdbc implements TaskDao {
 	}
 
 	@Override
-	public void add(Task t) {
+	public void add(Task t) throws DatabaseQueryException {
 		try (PreparedStatement st = conn.prepareStatement(
 				"INSERT INTO tasks (title, moment, done, user_id) VALUES (?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS)) {
@@ -80,12 +81,12 @@ public class TaskDaoJdbc implements TaskDao {
 				t.setId(rs.getInt(1));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DatabaseQueryException("Error when trying to add a new task to the database", e);
 		}
 	}
 
 	@Override
-	public void update(Task t) {
+	public void update(Task t) throws DatabaseQueryException {
 		try (PreparedStatement st = conn
 				.prepareStatement("UPDATE tasks SET title=?, moment=?, done=?, user_id=? WHERE id=?")) {
 			st.setString(1, t.getTitle());
@@ -95,17 +96,17 @@ public class TaskDaoJdbc implements TaskDao {
 			st.setInt(5, t.getId());
 			st.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DatabaseQueryException("Error when trying to update a task in the database", e);
 		}
 	}
 
 	@Override
-	public void delete(Task t) {
+	public void delete(Task t) throws DatabaseQueryException {
 		try (PreparedStatement st = conn.prepareStatement("DELETE FROM tasks WHERE id=?");) {
 			st.setInt(1, t.getId());
 			st.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DatabaseQueryException("Error when trying to delete a task from the database", e);
 		}
 	}
 

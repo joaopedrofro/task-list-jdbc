@@ -3,15 +3,15 @@ package db;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
+import db.exceptions.DatabaseConnectionException;
 
 public class Database {
 
 	private static Connection conn = null;
 
-	public static Connection getConnection() {
+	public static Connection getConnection() throws DatabaseConnectionException {
 		if (conn == null) {
 			String userHomePath = System.getProperty("user.home");
 			String url = "jdbc:sqlite:" + userHomePath + File.separator + "taskapp.db";
@@ -19,7 +19,7 @@ public class Database {
 			try {
 				conn = DriverManager.getConnection(url);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new DatabaseConnectionException("Error trying to connect to the database", e);
 			}
 			
 			return conn;
@@ -28,27 +28,11 @@ public class Database {
 		}
 	}
 	
-	public static void closeConnection() {
+	public static void closeConnection() throws DatabaseConnectionException {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void closeStatement(Statement st) {
-		try {
-			st.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void closeResultSet(ResultSet rs) {
-		try {
-			rs.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DatabaseConnectionException("Error trying to close to the database connection", e);
 		}
 	}
 

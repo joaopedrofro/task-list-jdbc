@@ -1,12 +1,15 @@
 package controller;
 
+import java.util.Base64;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import model.dao.DaoFactory;
 import model.dao.UserDao;
+import model.dao.exceptions.DatabaseQueryException;
 import model.entities.User;
 import services.AuthenticationService;
+import services.PasswordHashingService;
 import view.UserView;
 
 public class UserController extends GenericController {
@@ -28,13 +31,17 @@ public class UserController extends GenericController {
 				break;
 			}
 
-			if (auth.authenticate(userCredentials.get("username"), userCredentials.get("password"))) {
-				TaskController taskController = new TaskController(auth.getUserAuthenticated());
-				taskController.displayUserTasksMenu();
-				auth.logoutUserAuthenticated();
-				break;
-			} else {
-				UserView.showInfoMessage("Usuário ou senha inválidos");
+			try {
+				if (auth.authenticate(userCredentials.get("username"), userCredentials.get("password"))) {
+					TaskController taskController = new TaskController(auth.getUserAuthenticated());
+					taskController.displayUserTasksMenu();
+					auth.logoutUserAuthenticated();
+					break;
+				} else {
+					UserView.showInfoMessage("Usuário ou senha inválidos");
+				}
+			} catch (DatabaseQueryException e) {
+				UserView.showInfoMessage("Erro ao tentar autenticar o usuário: " + e.getLocalizedMessage());
 			}
 		}
 	}
@@ -54,12 +61,19 @@ public class UserController extends GenericController {
 				continue;
 			}
 
-			if (userDao.getUserByName(userData.get("username")).isPresent()) {
-				UserView.showInfoMessage("Nome de usuário já em uso. Por favor, escolha outro");
-			} else {
-				userDao.add(new User(0, userData.get("name"), userData.get("username"), userData.get("password")));
-				UserView.showInfoMessage("Registro feito");
-				break;
+			try {
+				if (userDao.getUserByName(userData.get("username")).isPresent()) {
+					UserView.showInfoMessage("Nome de usuário já em uso. Por favor, escolha outro");
+				} else {
+					byte[] salt = PasswordHashingService.getSalt();
+					String hashPassword = PasswordHashingService.hashPassword(userData.get("password"), salt);
+					userDao.add(new User(0, userData.get("name"), userData.get("username"), hashPassword,
+							Base64.getEncoder().encodeToString(salt)));
+					UserView.showInfoMessage("Registro feito");
+					break;
+				}
+			} catch (DatabaseQueryException e) {
+				UserView.showInfoMessage("Error ao tentar registrar usuário: " + e.getMessage());
 			}
 		}
 	}

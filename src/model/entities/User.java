@@ -11,25 +11,36 @@ public class User implements Serializable {
 	private String name;
 	private String username;
 	private String password;
+	private String salt;
 	private ArrayList<Task> tasks;
 
 	public User() {
 		tasks = new ArrayList<Task>();
 	}
-	
-	public User(Integer id, String name, String username, String password) {
+
+	public User(Integer id, String name, String username, String password, String salt) {
 		this.id = id;
 		this.name = name;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 	}
 
-	public User(Integer id, String name, String username, String password, ArrayList<Task> tasks) {
+	public User(Integer id, String name, String username, String password, String salt, ArrayList<Task> tasks) {
 		this.id = id;
 		this.name = name;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 		this.tasks = tasks;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public ArrayList<Task> getTasks() {
